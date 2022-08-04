@@ -59,7 +59,7 @@ class BreadthFirstSearch
 
             Frontier.Enqueue(item);
             CameFrom[item] = current;
-            Unexplored.Remove(item);
+            // Unexplored.Remove(item);
         }
     }
 }
