@@ -2,25 +2,27 @@ namespace Pathfinder;
 
 class BreadthFirstSearch
 {
-    public int CellSize { get; }
     public SquareGrid Grid { get; }
-    public HashSet<Location> Empty { get; }
+    public HashSet<Location> Unexplored { get; }
     public Queue<Location> Frontier { get; }
     public Dictionary<Location, Location> CameFrom { get; }
 
-    public BreadthFirstSearch(SquareGrid grid, int cellSize, Location start)
+    public BreadthFirstSearch(SquareGrid grid, Location start)
     {
         Grid = grid;
-        CellSize = cellSize;
         Frontier = new Queue<Location>();
         CameFrom = new Dictionary<Location, Location>();
-        Empty = new HashSet<Location>();
+        Unexplored = new HashSet<Location>();
 
         for (int y = 0; y < grid.Height; y++)
         {
             for (int x = 0; x < grid.Width; x++)
             {
-                Empty.Add(new Location(x, y));
+                var location = new Location(x, y);
+                if (location.Equals(start))
+                    continue;
+
+                Unexplored.Add(location);
             }
         }
 
@@ -28,19 +30,26 @@ class BreadthFirstSearch
         CameFrom[start] = start;
     }
 
-    public void Search()
+    public void SearchGrid()
     {
-        int loops = Frontier.Count;
-        for (int x = 0; x < loops; x++)
+        while (Frontier.Count > 0)
         {
-            GetFrontiers();
+            Search();
         }
     }
 
-    void GetFrontiers()
+    public void SearchFrontiers()
     {
-        if (Frontier.Count <= 0) return;
+        int count = Frontier.Count;
 
+        for (int x = 0; x < count; x++)
+        {
+            Search();
+        }
+    }
+
+    void Search()
+    {
         Location current = Frontier.Dequeue();
 
         foreach (var item in Grid.Neighbors(current))
@@ -50,7 +59,7 @@ class BreadthFirstSearch
 
             Frontier.Enqueue(item);
             CameFrom[item] = current;
-            Empty.Remove(item);
+            Unexplored.Remove(item);
         }
     }
 }

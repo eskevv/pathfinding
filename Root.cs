@@ -24,7 +24,7 @@ public class Root : Game
     public Root()
     {
         _graphics = new GraphicsDeviceManager(this);
-        _algorithm = new BreadthFirstSearch(new SquareGrid(48, 27), 40, new Location(12, 13));
+        _algorithm = new BreadthFirstSearch(new SquareGrid(48, 27), new Location(12, 13));
         _algorithm.Grid.AddWall(29, 21);
         _algorithm.Grid.AddWall(30, 21);
         _algorithm.Grid.AddWall(31, 21);
@@ -135,7 +135,7 @@ public class Root : Game
         if (_time++ >= 18)
         {
             _time = 0;
-            _algorithm.Search();
+            _algorithm.SearchFrontiers();
         }
 
         base.Update(gameTime);
@@ -146,42 +146,43 @@ public class Root : Game
         GraphicsDevice.Clear(new Color(49, 49, 49));
         _shapebatch.Begin();
 
-        foreach (var item in _algorithm.Empty)
+        int cellSize = 40;
+        foreach (var item in _algorithm.Unexplored)
         {
-            int xx = item.X * _algorithm.CellSize;
-            int yy = item.Y * _algorithm.CellSize;
-            _shapebatch.DrawRect(xx, yy, _algorithm.CellSize, _algorithm.CellSize, Color.WhiteSmoke);
+            int xx = item.X * cellSize;
+            int yy = item.Y * cellSize;
+            _shapebatch.DrawRect(xx, yy, cellSize, cellSize, Color.WhiteSmoke);
         }
 
         foreach (var item in _algorithm.CameFrom.Keys)
         {
             if (_algorithm.Frontier.Contains(item))
                 continue;
-            int xx = item.X * _algorithm.CellSize;
-            int yy = item.Y * _algorithm.CellSize;
-            _shapebatch.DrawFillRect(xx, yy, _algorithm.CellSize, _algorithm.CellSize, Color.Gray);
+            int xx = item.X * cellSize;
+            int yy = item.Y * cellSize;
+            _shapebatch.DrawFillRect(xx, yy, cellSize, cellSize, Color.Gray);
         }
         foreach (var item in _algorithm.CameFrom.Keys)
         {
             if (_algorithm.Frontier.Contains(item))
                 continue;
-            int xx = item.X * _algorithm.CellSize;
-            int yy = item.Y * _algorithm.CellSize;
-            _shapebatch.DrawRect(xx, yy, _algorithm.CellSize, _algorithm.CellSize, Color.WhiteSmoke);
+            int xx = item.X * cellSize;
+            int yy = item.Y * cellSize;
+            _shapebatch.DrawRect(xx, yy, cellSize, cellSize, Color.WhiteSmoke);
         }
 
         foreach (var item in _algorithm.Frontier)
         {
-            int xx = item.X * _algorithm.CellSize;
-            int yy = item.Y * _algorithm.CellSize;
-            _shapebatch.DrawRect(xx, yy, _algorithm.CellSize, _algorithm.CellSize, Color.Red, 3);
+            int xx = item.X * cellSize;
+            int yy = item.Y * cellSize;
+            _shapebatch.DrawRect(xx, yy, cellSize, cellSize, Color.Red, 3);
         }
 
         foreach (var item in _algorithm.Grid.Walls)
         {
-            int xx = item.X * _algorithm.CellSize;
-            int yy = item.Y * _algorithm.CellSize;
-            _shapebatch.DrawFillRect(xx, yy, _algorithm.CellSize, _algorithm.CellSize, Color.DimGray);
+            int xx = item.X * cellSize;
+            int yy = item.Y * cellSize;
+            _shapebatch.DrawFillRect(xx, yy, cellSize, cellSize, Color.DimGray);
         }
 
         _shapebatch.End();

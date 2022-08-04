@@ -25,19 +25,21 @@ class SquareGrid : IWeightedGraph<Location>
         }
     }
 
-    public double Cost(Location a, Location b)
+    public double Cost(Location spot)
     {
-        return Forests.Contains(b) ? 5 : 1;
+        return Forests.Contains(spot) ? 5 : 1;
     }
 
     public void AddWall(int x, int y)
     {
-        Walls.Add(new Location(x, y));
+        var location = new Location(x, y);
+        if (InBounds(location))
+            Walls.Add(location);
     }
 
     Location[] PossibleDirections()
     {
-        return new Location[] 
+        return new Location[]
         {
             new Location(1,0),
             new Location(0, -1),
