@@ -3,5 +3,5 @@
 /.config
 /Content
 /app.manifest
-.bmp*
-.ico*
+.bmp
+.ico
